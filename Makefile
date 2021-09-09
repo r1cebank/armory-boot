@@ -6,9 +6,9 @@
 # Use of this source code is governed by the license
 # that can be found in the LICENSE file.
 
-BUILD_USER = $(shell whoami)
-BUILD_HOST = $(shell hostname)
-BUILD_DATE = $(shell /bin/date -u "+%Y-%m-%d %H:%M:%S")
+BUILD_USER ?= $(shell whoami)
+BUILD_HOST ?= $(shell hostname)
+BUILD_DATE ?= $(shell /bin/date -u "+%Y-%m-%d %H:%M:%S")
 BUILD_TAGS = linkramsize,linkramstart
 BUILD = ${BUILD_USER}@${BUILD_HOST} on ${BUILD_DATE}
 REV = $(shell git rev-parse --short HEAD 2> /dev/null)
@@ -107,7 +107,7 @@ $(APP).imx: $(APP).bin $(APP).dcd
 #### secure boot ####
 
 $(APP)-signed.imx: check_hab_keys $(APP).imx
-	${TAMAGO} install github.com/f-secure-foundry/crucible/cmd/habtool@latest
+	${TAMAGO} install github.com/f-secure-foundry/crucible/cmd/habtool
 	$(shell ${TAMAGO} env GOPATH)/bin/habtool \
 		-A ${HAB_KEYS}/CSF_1_key.pem \
 		-a ${HAB_KEYS}/CSF_1_crt.pem \
